@@ -17,6 +17,16 @@ type idEndereco = {
    id: string
 }
 
+type endereco = {
+   cidade: string,
+   bairro: string,
+   rua: string
+}
+
+type enderecoObj = {
+   id_endereco: string
+}
+
 type veterinario = {
    nome: string,
    cpf: string
@@ -105,7 +115,33 @@ server.put("/veterinario/:id", async (req, rep) => {
 // Atualizar endereço
 
 server.put("/veterinario/endereco/:id", async (req, rep) => {
-   
+   const { cidade, bairro, rua } = req.body as endereco
+   const { id } = req.params as idVeterinario
+
+   let enderecoId: string = await new Promise((resolve, reject) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{id_endereco: string}>) => {
+         resolve(rows[0].id_endereco)
+      })
+   })
+
+   db.exec(`
+      update endereco_veterinario 
+      set
+         cidade = '${cidade}',
+         bairro = '${bairro}',
+         rua = '${rua}'
+      where id_endereco_veterinario = '${enderecoId}'
+   `)
+
+   let enderecoUpdated = await new Promise((resolve, reject) => {
+      db.all(`select * from endereco_veterinario where id_endereco_veterinario = '${enderecoId}'`, (err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   console.log(enderecoUpdated)
+
+   return rep.status(200).send(enderecoUpdated)
 })
 
 // Deletar usuario e endereco
