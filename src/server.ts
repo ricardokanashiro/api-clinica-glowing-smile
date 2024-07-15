@@ -44,12 +44,18 @@ server.get("/veterinarios", async (req, rep) => {
    return rep.send(veterinario)
 })
 
-// Receber endereco de um veterinário
+// Pegar endereco de um veterinário
 server.get("/veterinario/endereco/:id", async (req, rep) => {
    const { id } = req.params as idEndereco
 
+   let idEndereco: string = await new Promise((resolve, reject) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{id_endereco: string}>) => {
+         resolve(rows[0].id_endereco)
+      })
+   })
+
    let endereco = await new Promise((resolve, reject) => {
-      db.all(`select * from endereco_veterinario where id_endereco_veterinario = '${id}'`, (err, rows) => {
+      db.all(`select * from endereco_veterinario where id_endereco_veterinario = '${idEndereco}'`, (err, rows) => {
          resolve(rows)
       })
    })
