@@ -23,10 +23,6 @@ type endereco = {
    rua: string
 }
 
-type enderecoObj = {
-   id_endereco: string
-}
-
 type veterinario = {
    nome: string,
    cpf: string
@@ -36,6 +32,7 @@ type idVeterinario = {
    id: string
 }
 
+// Listar os veterinários
 server.get("/veterinarios", async (req, rep) => {
 
    let veterinario = await new Promise((resolve, reject) => {
@@ -47,6 +44,7 @@ server.get("/veterinarios", async (req, rep) => {
    return rep.send(veterinario)
 })
 
+// Receber endereco de um veterinário
 server.get("/veterinario/endereco/:id", async (req, rep) => {
    const { id } = req.params as idEndereco
 
@@ -59,6 +57,7 @@ server.get("/veterinario/endereco/:id", async (req, rep) => {
    return rep.send(endereco)
 })
 
+// Cadastrar um veterinário e seu endereço
 server.post("/veterinario", async (req, rep) => {
 
    const { cidade, bairro, rua, cpf, nome } = req.body as veterinariosAndEndereco
@@ -90,7 +89,7 @@ server.post("/veterinario", async (req, rep) => {
    return rep.status(201).send([newVeterinario, newEndereco])
 })
 
-// Atualizar veterinario
+// Atualizar veterinário
 server.put("/veterinario/:id", async (req, rep) => {
    const { nome, cpf } = req.body as veterinario
    const { id } = req.params as idVeterinario
@@ -113,7 +112,6 @@ server.put("/veterinario/:id", async (req, rep) => {
 })
 
 // Atualizar endereço
-
 server.put("/veterinario/endereco/:id", async (req, rep) => {
    const { cidade, bairro, rua } = req.body as endereco
    const { id } = req.params as idVeterinario
@@ -144,7 +142,21 @@ server.put("/veterinario/endereco/:id", async (req, rep) => {
    return rep.status(200).send(enderecoUpdated)
 })
 
-// Deletar usuario e endereco
+// Deletar veterinário e endereco
+server.delete("/veterinario/:id", async (req, rep) => {
+   const { id } = req.params as idVeterinario
+
+   let enderecoId: string = await new Promise((resolve, reject) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{id_endereco: string}>) => {
+         resolve(rows[0].id_endereco)
+      })
+   })
+
+   db.exec(`delete from veterinario where codigo_veterinario = '${id}'`)
+   db.exec(`delete from endereco_veterinario where id_endereco_veterinario = '${enderecoId}'`)
+
+   return rep.status(200).send('foi')
+})
 
 server.listen({
    port: 4444
