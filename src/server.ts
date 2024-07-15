@@ -49,7 +49,7 @@ server.get("/veterinario/endereco/:id", async (req, rep) => {
    const { id } = req.params as idEndereco
 
    let idEndereco: string = await new Promise((resolve, reject) => {
-      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{id_endereco: string}>) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{ id_endereco: string }>) => {
          resolve(rows[0].id_endereco)
       })
    })
@@ -95,6 +95,31 @@ server.post("/veterinario", async (req, rep) => {
    return rep.status(201).send([newVeterinario, newEndereco])
 })
 
+// Cadastrar um telefone de um veterinário
+
+server.post("/veterinario/telefone/:id", async (req, rep) => {
+   const { numero } = req.body as { numero: string }
+   const { id } = req.params as { id: string }
+
+   db.run(`
+      insert into telefones_veterinario (id_veterinario, numero) 
+      values (?, ?)
+   `, [id, numero])
+
+   let newTelefone = await new Promise((resolve, reject) => {
+      db.prepare("select * from telefones_veterinario where id_veterinario = ? and numero = ?")
+      .get([id, numero], (err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(201).send(newTelefone)
+})
+
+// Obter os telefones de um veterinário
+// Editar telefone de um veterinário
+// Deletar telefone de um veterinário
+
 // Atualizar veterinário
 server.put("/veterinario/:id", async (req, rep) => {
    const { nome, cpf } = req.body as veterinario
@@ -123,7 +148,7 @@ server.put("/veterinario/endereco/:id", async (req, rep) => {
    const { id } = req.params as idVeterinario
 
    let enderecoId: string = await new Promise((resolve, reject) => {
-      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{id_endereco: string}>) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{ id_endereco: string }>) => {
          resolve(rows[0].id_endereco)
       })
    })
@@ -153,7 +178,7 @@ server.delete("/veterinario/:id", async (req, rep) => {
    const { id } = req.params as idVeterinario
 
    let enderecoId: string = await new Promise((resolve, reject) => {
-      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{id_endereco: string}>) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{ id_endereco: string }>) => {
          resolve(rows[0].id_endereco)
       })
    })
@@ -164,6 +189,18 @@ server.delete("/veterinario/:id", async (req, rep) => {
    return rep.status(200).send('foi')
 })
 
+// Criar um reponsável
+// Obter todos os responsáveis
+// Obter endereço de um responsável
+// Editar um responsável
+// Editar endereço de um responsável
+// Deletar um responsável
+
+// Cadastrar um telefone de um responsável
+// Obter telefones de um responsável
+// Deletar um telefone de um responsável
+// Editar um telefone de um responsável
+
 server.listen({
    port: 4444
-})
+}).then(() => console.log('Server ON'))
