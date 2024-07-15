@@ -1,0 +1,22 @@
+{
+  "name": "api-clinica-glowing-smile",
+  "version": "1.0.0",
+  "description": "api para uma clínica veterinária fictícia",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx tsx src/server.ts",
+    "cbd": "npx tsx src/ConfigDB.ts"
+  },
+  "author": "Ricardo Kanashiro",
+  "license": "ISC",
+  "dependencies": {
+    "@types/uuid": "^10.0.0",
+    "fastify": "^4.28.1",
+    "sqlite3": "^5.1.7",
+    "uuid": "^10.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.3"
+  }
+}
