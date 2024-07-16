@@ -287,8 +287,66 @@ server.get("/responsavel/:cpf", async (req, rep) => {
 })
 
 // Obter endereço de um responsável
+
+server.get("/responsavel/endereco/:cpf", async (req, rep) => {
+   const { cpf } = req.params as { cpf: string }
+
+   let { id_endereco } = await new Promise((resolve, reject) => {
+      db.prepare("select id_endereco from responsavel where CPF = ?")
+      .get(cpf, (err, row: any) => {
+         resolve(row)
+      })
+   }) as any
+
+   let endereco = await new Promise((resolve, reject) => {
+      db.prepare("select * from endereco_responsavel where id_endereco = ?")
+      .get(id_endereco, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(200).send(endereco)
+
+})
+
 // Editar um responsável
+
+server.put("/responsavel/:cpf", async (req, rep) => {
+   const { cpf } = req.params as { cpf: string }
+   const { nome } = req.body as { nome: string }
+
+   db.prepare("update responsavel set nome = ? where CPF = ?")
+   .run(nome, cpf)
+
+   let updatedResponsavel = await new Promise((resolve, reject) => {
+      db.prepare("select * from responsavel where CPF = ?")
+      .get(cpf, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(200).send(updatedResponsavel)
+})
+
 // Editar endereço de um responsável
+
+server.put("/responsavel/endereco/:cpf", async (req, rep) => {
+   const { cpf } = req.params as { cpf: string }
+   const { cidade, bairro, rua } = req.body as endereco
+
+   let { id_endereco } = await new Promise((resolve, reject) => {
+      db.prepare("select id_endereco from responsavel where CPF = ?")
+      .get(cpf, (err, row) => {
+         resolve(row)
+      })
+   }) as any
+
+   db.prepare("update endereco_responsavel set cidade = ?, bairro = ?, rua = ? where id_endereco = ?")
+   .run([cidade, bairro, rua, id_endereco])
+
+   return rep.status(200).send("Endereco atualizado com sucesso")
+})
+
 // Deletar um responsável
 
 // Cadastrar um telefone de um responsável
