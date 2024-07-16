@@ -108,16 +108,49 @@ server.post("/veterinario/telefone/:id", async (req, rep) => {
 
    let newTelefone = await new Promise((resolve, reject) => {
       db.prepare("select * from telefones_veterinario where id_veterinario = ? and numero = ?")
-      .get([id, numero], (err, rows) => {
-         resolve(rows)
-      })
+         .get([id, numero], (err, rows) => {
+            resolve(rows)
+         })
    })
 
    return rep.status(201).send(newTelefone)
 })
 
 // Obter os telefones de um veterinário
+
+server.get("/veterinario/telefone/:id", async (req, rep) => {
+   const { id } = req.params as { id: string }
+
+   const telefones = await new Promise((resolve, reject) => {
+      db.prepare("select * from telefones_veterinario where id_veterinario = ?")
+         .all(id, (err, rows) => {
+            resolve(rows)
+         })
+   })
+
+   return rep.status(200).send(telefones)
+
+})
+
 // Editar telefone de um veterinário
+
+server.put("/veterinario/telefone/:id", async (req, rep) => {
+   const { id } = req.params as { id: string }
+   const { numero, novoNumero } = req.body as { numero: string, novoNumero: string }
+
+   db.prepare("update telefones_veterinario set numero = ? where id_veterinario = ? and numero = ?")
+   .run([novoNumero, id, numero])
+
+   let numeroUpdated = await new Promise((resolve, reject) => {
+      db.prepare("select * from telefones_veterinario where id_veterinario = ? and numero = ?")
+      .get([id, novoNumero], (err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(numeroUpdated)
+})
+
 // Deletar telefone de um veterinário
 
 // Atualizar veterinário
