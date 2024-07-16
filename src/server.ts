@@ -233,7 +233,6 @@ server.delete("/veterinario/:id", async (req, rep) => {
 })
 
 // Criar um responsável
-
 server.post("/responsavel", async (req, rep) => {
    const { cpf, nome, cidade, bairro, rua } = req.body as responsavelAndEndereco
    const enderecoId = uuidv4().substring(0,12)
@@ -262,6 +261,31 @@ server.post("/responsavel", async (req, rep) => {
 })
 
 // Obter todos os responsáveis
+server.get("/responsavel", async (req, rep) => {
+   let responsaveis = await new Promise((resolve, reject) => {
+      db.prepare("select * from responsavel").all((err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(responsaveis)
+})
+
+// Obter responsável
+server.get("/responsavel/:cpf", async (req, rep) => {
+
+   const { cpf } = req.params as { cpf: string }
+
+   let responsavel = await new Promise((resolve, reject) => {
+      db.prepare("select * from responsavel where CPF = ?")
+      .get(cpf, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(200).send(responsavel)
+})
+
 // Obter endereço de um responsável
 // Editar um responsável
 // Editar endereço de um responsável
