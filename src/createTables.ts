@@ -46,7 +46,7 @@ db.exec(`
       primary key (id_endereco)
    );
 
-   create table resposavel (
+   create table responsavel (
       CPF varchar(11) not null, 
       nome varchar(40) not null,
       id_endereco varchar(12) not null,
