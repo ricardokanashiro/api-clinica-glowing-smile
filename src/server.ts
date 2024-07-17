@@ -385,7 +385,7 @@ server.get("/responsavel/telefone/:cpf", async (req, rep) => {
 
 // Deletar um telefone de um responsável
 
-server.delete("/responsavel/telefone/:cpf", (req, rep) => {
+server.delete("/responsavel/telefone/:cpf", async (req, rep) => {
    const { cpf } = req.params as any
    const { numero } = req.body as any
 
@@ -393,6 +393,68 @@ server.delete("/responsavel/telefone/:cpf", (req, rep) => {
    .run([cpf, numero])
 
    return rep.status(200).send("Telefone deletado com sucesso")
+})
+
+// Cadastrar tipo de pet
+
+server.post("/pet/tipo", async (req, rep) => {
+   const id_tipo = uuidv4().substring(0,12)
+   const { tipo, raca } = req.body as any
+
+   db.prepare("insert into tipo_pet (id_tipo, tipo, raca) values (?, ?, ?)")
+   .run([id_tipo, tipo, raca])
+
+   let newTipo = await new Promise((resolve, reject) => {
+      db.prepare("select * from tipo_pet where id_tipo = ?")
+      .get(id_tipo, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(201).send(newTipo)
+})
+
+// Obter tipos de pet 
+
+server.get("/pet/tipo", async (req, rep) => {
+   let tipos = await new Promise((resolve, reject) => {
+      db.prepare("select * from tipo_pet")
+      .all((err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(tipos)
+})
+
+// Editar tipo pet
+
+server.put("/pet/tipo/:id", async (req, rep) => {
+   const { id } = req.params as any
+   const { tipo, raca } = req.body as any
+
+   db.prepare("update tipo_pet set tipo = ?, raca = ? where id_tipo = ?")
+   .run([tipo, raca, id])
+
+   let updatedTipo = await new Promise((resolve, reject) => {
+      db.prepare("select * from tipo_pet where id_tipo = ?")
+      .get([id], (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(200).send(updatedTipo)
+})
+
+// Deletar tipo pet
+
+server.delete("/pet/tipo/:id", (req, rep) => {
+   const { id } = req.params as any
+
+   db.prepare("delete from tipo_pet where id_tipo = ?")
+   .run(id)
+
+   return rep.status(200).send("Tipo deletado com sucesso")
 })
 
 server.listen({
