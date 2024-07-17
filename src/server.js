@@ -507,6 +507,38 @@ server.delete("/pet/:id", (req, rep) => {
    return rep.status(200).send("Pet deletado com sucesso")
 })
 
+// Cadastrar consulta
+
+server.post("/consulta", async (req, rep) => {
+   const id_consulta = uuidv4().substring(0,12)
+   const { data, horario, id_pet, id_responsavel, id_veterinario } = req.body
+
+   db.prepare("insert into consulta (id_consulta, data, horario, id_pet, id_responsavel, id_veterinario) values (?, ?, ?, ?, ?, ?)")
+   .run([id_consulta, data, horario, id_pet, id_responsavel, id_veterinario])
+
+   const newConsulta = await new Promise((resolve, reject) => {
+      db.prepare("select * from consulta where id_consulta = ?")
+      .get(id_consulta, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(201).send(newConsulta)
+})
+
+// Obter todas consultas
+
+server.get("/consulta/all", async (req, rep) => {
+   const consultas = await new Promise((resolve, reject) => {
+      db.prepare("select * from consulta")
+      .all((err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(consultas)
+})
+
 server.listen({
    port: 4444
 }).then(() => console.log('Server ON'))
