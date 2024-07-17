@@ -132,25 +132,6 @@ server.get("/veterinario/telefone/:id", async (req, rep) => {
 
 })
 
-// Editar telefone de um veterinário
-
-server.put("/veterinario/telefone/:id", async (req, rep) => {
-   const { id } = req.params as { id: string }
-   const { numero, novoNumero } = req.body as { numero: string, novoNumero: string }
-
-   db.prepare("update telefones_veterinario set numero = ? where id_veterinario = ? and numero = ?")
-   .run([novoNumero, id, numero])
-
-   let numeroUpdated = await new Promise((resolve, reject) => {
-      db.prepare("select * from telefones_veterinario where id_veterinario = ? and numero = ?")
-      .get([id, novoNumero], (err, rows) => {
-         resolve(rows)
-      })
-   })
-
-   return rep.status(200).send(numeroUpdated)
-})
-
 // Deletar telefone de um veterinário
 
 server.delete("/veterinario/telefone/:id", (req, rep) => {
@@ -349,10 +330,70 @@ server.put("/responsavel/endereco/:cpf", async (req, rep) => {
 
 // Deletar um responsável
 
+server.delete("/responsavel/:cpf", async (req, rep) => {
+   const { cpf } = req.params as any
+
+   let { id_endereco } = await new Promise((resolve, reject) => {
+      db.prepare("select id_endereco from responsavel where CPF = ?")
+      .get(cpf, (err, row) => {
+         resolve(row)
+      })
+   }) as any
+
+   db.prepare("delete from responsavel where CPF = ?")
+   .run(cpf)
+
+   db.prepare("delete from endereco_responsavel where id_endereco = ?")
+   .run(id_endereco)
+
+   return rep.status(200).send("Responsável deletado com sucesso")
+})
+
 // Cadastrar um telefone de um responsável
+
+server.post("/responsavel/telefone/:cpf", async (req, rep) => {
+   const { cpf } = req.params as any
+   const { numero } = req.body as any
+
+   db.prepare("insert into telefones_responsavel (CPF_responsavel, numero) values (?, ?)")
+   .run([cpf, numero])
+
+   const newTelefone = await new Promise((resolve, reject) => {
+      db.prepare("select * from telefones_responsavel where CPF_responsavel = ?")
+      .get(cpf, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(201).send(newTelefone)
+})
+
 // Obter telefones de um responsável
+
+server.get("/responsavel/telefone/:cpf", async (req, rep) => {
+   const { cpf } = req.params as any
+
+   const numeros = await new Promise((resolve, reject) => {
+      db.prepare("select * from telefones_responsavel where CPF_responsavel = ?")
+      .all(cpf, (err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(numeros)
+})
+
 // Deletar um telefone de um responsável
-// Editar um telefone de um responsável
+
+server.delete("/responsavel/telefone/:cpf", (req, rep) => {
+   const { cpf } = req.params as any
+   const { numero } = req.body as any
+
+   db.prepare("delete from telefones_responsavel where CPF_responsavel = ? and numero = ?")
+   .run([cpf, numero])
+
+   return rep.status(200).send("Telefone deletado com sucesso")
+})
 
 server.listen({
    port: 4444
