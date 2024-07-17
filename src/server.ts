@@ -457,6 +457,53 @@ server.delete("/pet/tipo/:id", (req, rep) => {
    return rep.status(200).send("Tipo deletado com sucesso")
 })
 
+// Cadastrar um pet
+
+server.post("/pet", async (req, rep) => {
+   const codigo_pet = uuidv4().substring(0, 12)
+   const { nome, idade, situacao, id_tipo, cpf_responsavel } = req.body as any
+
+   db.prepare("insert into pet (codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel) values (?, ?, ?, ?, ?, ?)")
+   .run([codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel])
+
+   const newPet = await new Promise((resolve, reject) => {
+      db.prepare("select * from pet where codigo_pet = ?")
+      .get(codigo_pet, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(201).send(newPet)
+})
+
+// Obter todos pets
+
+server.get("/pet/all", async (req, rep) => {
+   const allPets = await new Promise((resolve, reject) => {
+      db.prepare("select * from pet")
+      .all((err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(allPets)
+})
+
+// Obter pet
+
+server.get("/pet/:id", async (req, rep) => {
+   const { id } = req.params as any
+
+   const pet = await new Promise((resolve, reject) => {
+      db.prepare("select * from pet where codigo_pet = ?")
+      .get(id, (err, rows) => {
+         resolve(rows)
+      })
+   })
+
+   return rep.status(200).send(pet)
+})
+
 server.listen({
    port: 4444
 }).then(() => console.log('Server ON'))
