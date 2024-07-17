@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "api para uma clínica veterinária fictícia",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "dev": "npx tsx src/server.ts",
-    "cbd": "npx tsx src/ConfigDB.ts"
+    "dev": "node src/server.js",
+    "cbd": "node src/ConfigDB.js"
   },
   "author": "Ricardo Kanashiro",
   "license": "ISC",

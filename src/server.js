@@ -1,36 +1,9 @@
 import fastify from "fastify"
 import { v4 as uuidv4 } from "uuid"
 
-import { db } from "./configDB"
+import { db } from "./configDB.js"
 
 const server = fastify()
-
-type veterinariosAndEndereco = {
-   cidade: string,
-   bairro: string,
-   rua: string,
-   cpf: string,
-   nome: string
-}
-
-type endereco = {
-   cidade: string,
-   bairro: string,
-   rua: string
-}
-
-type veterinario = {
-   nome: string,
-   cpf: string
-}
-
-type responsavelAndEndereco = {
-   cpf: string,
-   nome: string,
-   rua: string,
-   bairro: string,
-   cidade: string
-}
 
 // Listar os veterinários
 server.get("/veterinarios", async (req, rep) => {
@@ -46,10 +19,10 @@ server.get("/veterinarios", async (req, rep) => {
 
 // Pegar endereco de um veterinário
 server.get("/veterinario/endereco/:id", async (req, rep) => {
-   const { id } = req.params as { id: string }
+   const { id } = req.params
 
-   let idEndereco: string = await new Promise((resolve, reject) => {
-      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{ id_endereco: string }>) => {
+   let idEndereco = await new Promise((resolve, reject) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows) => {
          resolve(rows[0].id_endereco)
       })
    })
@@ -66,7 +39,7 @@ server.get("/veterinario/endereco/:id", async (req, rep) => {
 // Cadastrar um veterinário e seu endereço
 server.post("/veterinario", async (req, rep) => {
 
-   const { cidade, bairro, rua, cpf, nome } = req.body as veterinariosAndEndereco
+   const { cidade, bairro, rua, cpf, nome } = req.body
    const id_endereco = uuidv4().substring(0, 12)
    const cod_veterinario = uuidv4().substring(0, 12)
 
@@ -98,8 +71,8 @@ server.post("/veterinario", async (req, rep) => {
 // Cadastrar um telefone de um veterinário
 
 server.post("/veterinario/telefone/:id", async (req, rep) => {
-   const { numero } = req.body as { numero: string }
-   const { id } = req.params as { id: string }
+   const { numero } = req.body
+   const { id } = req.params
 
    db.run(`
       insert into telefones_veterinario (id_veterinario, numero) 
@@ -119,7 +92,7 @@ server.post("/veterinario/telefone/:id", async (req, rep) => {
 // Obter os telefones de um veterinário
 
 server.get("/veterinario/telefone/:id", async (req, rep) => {
-   const { id } = req.params as { id: string }
+   const { id } = req.params
 
    const telefones = await new Promise((resolve, reject) => {
       db.prepare("select * from telefones_veterinario where id_veterinario = ?")
@@ -135,8 +108,8 @@ server.get("/veterinario/telefone/:id", async (req, rep) => {
 // Deletar telefone de um veterinário
 
 server.delete("/veterinario/telefone/:id", (req, rep) => {
-   const { id } = req.params as { id: string }
-   const { numero } = req.body as { numero: string }
+   const { id } = req.params
+   const { numero } = req.body
 
    db.prepare("delete from telefones_veterinario where id_veterinario = ? and numero = ?")
    .run([id, numero])
@@ -146,8 +119,8 @@ server.delete("/veterinario/telefone/:id", (req, rep) => {
 
 // Atualizar veterinário
 server.put("/veterinario/:id", async (req, rep) => {
-   const { nome, cpf } = req.body as veterinario
-   const { id } = req.params as { id: string }
+   const { nome, cpf } = req.body
+   const { id } = req.params
 
    db.exec(`
       update veterinario 
@@ -168,11 +141,11 @@ server.put("/veterinario/:id", async (req, rep) => {
 
 // Atualizar endereço
 server.put("/veterinario/endereco/:id", async (req, rep) => {
-   const { cidade, bairro, rua } = req.body as endereco
-   const { id } = req.params as { id: string }
+   const { cidade, bairro, rua } = req.body
+   const { id } = req.params
 
-   let enderecoId: string = await new Promise((resolve, reject) => {
-      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{ id_endereco: string }>) => {
+   let enderecoId = await new Promise((resolve, reject) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows) => {
          resolve(rows[0].id_endereco)
       })
    })
@@ -199,10 +172,10 @@ server.put("/veterinario/endereco/:id", async (req, rep) => {
 
 // Deletar veterinário e endereco
 server.delete("/veterinario/:id", async (req, rep) => {
-   const { id } = req.params as { id: string }
+   const { id } = req.params
 
-   let enderecoId: string = await new Promise((resolve, reject) => {
-      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows: Array<{ id_endereco: string }>) => {
+   let enderecoId = await new Promise((resolve, reject) => {
+      db.all(`select id_endereco from veterinario where codigo_veterinario = '${id}'`, (err, rows) => {
          resolve(rows[0].id_endereco)
       })
    })
@@ -215,7 +188,7 @@ server.delete("/veterinario/:id", async (req, rep) => {
 
 // Criar um responsável
 server.post("/responsavel", async (req, rep) => {
-   const { cpf, nome, cidade, bairro, rua } = req.body as responsavelAndEndereco
+   const { cpf, nome, cidade, bairro, rua } = req.body
    const enderecoId = uuidv4().substring(0,12)
 
    db.prepare("insert into endereco_responsavel (id_endereco, cidade, bairro, rua) values (?, ?, ?, ?)")
@@ -255,7 +228,7 @@ server.get("/responsavel", async (req, rep) => {
 // Obter responsável
 server.get("/responsavel/:cpf", async (req, rep) => {
 
-   const { cpf } = req.params as { cpf: string }
+   const { cpf } = req.params
 
    let responsavel = await new Promise((resolve, reject) => {
       db.prepare("select * from responsavel where CPF = ?")
@@ -270,14 +243,14 @@ server.get("/responsavel/:cpf", async (req, rep) => {
 // Obter endereço de um responsável
 
 server.get("/responsavel/endereco/:cpf", async (req, rep) => {
-   const { cpf } = req.params as { cpf: string }
+   const { cpf } = req.params
 
    let { id_endereco } = await new Promise((resolve, reject) => {
       db.prepare("select id_endereco from responsavel where CPF = ?")
-      .get(cpf, (err, row: any) => {
+      .get(cpf, (err, row) => {
          resolve(row)
       })
-   }) as any
+   })
 
    let endereco = await new Promise((resolve, reject) => {
       db.prepare("select * from endereco_responsavel where id_endereco = ?")
@@ -293,8 +266,8 @@ server.get("/responsavel/endereco/:cpf", async (req, rep) => {
 // Editar um responsável
 
 server.put("/responsavel/:cpf", async (req, rep) => {
-   const { cpf } = req.params as { cpf: string }
-   const { nome } = req.body as { nome: string }
+   const { cpf } = req.params
+   const { nome } = req.body
 
    db.prepare("update responsavel set nome = ? where CPF = ?")
    .run(nome, cpf)
@@ -312,15 +285,15 @@ server.put("/responsavel/:cpf", async (req, rep) => {
 // Editar endereço de um responsável
 
 server.put("/responsavel/endereco/:cpf", async (req, rep) => {
-   const { cpf } = req.params as { cpf: string }
-   const { cidade, bairro, rua } = req.body as endereco
+   const { cpf } = req.params
+   const { cidade, bairro, rua } = req.body
 
    let { id_endereco } = await new Promise((resolve, reject) => {
       db.prepare("select id_endereco from responsavel where CPF = ?")
       .get(cpf, (err, row) => {
          resolve(row)
       })
-   }) as any
+   })
 
    db.prepare("update endereco_responsavel set cidade = ?, bairro = ?, rua = ? where id_endereco = ?")
    .run([cidade, bairro, rua, id_endereco])
@@ -331,14 +304,14 @@ server.put("/responsavel/endereco/:cpf", async (req, rep) => {
 // Deletar um responsável
 
 server.delete("/responsavel/:cpf", async (req, rep) => {
-   const { cpf } = req.params as any
+   const { cpf } = req.params
 
    let { id_endereco } = await new Promise((resolve, reject) => {
       db.prepare("select id_endereco from responsavel where CPF = ?")
       .get(cpf, (err, row) => {
          resolve(row)
       })
-   }) as any
+   })
 
    db.prepare("delete from responsavel where CPF = ?")
    .run(cpf)
@@ -352,8 +325,8 @@ server.delete("/responsavel/:cpf", async (req, rep) => {
 // Cadastrar um telefone de um responsável
 
 server.post("/responsavel/telefone/:cpf", async (req, rep) => {
-   const { cpf } = req.params as any
-   const { numero } = req.body as any
+   const { cpf } = req.params
+   const { numero } = req.body
 
    db.prepare("insert into telefones_responsavel (CPF_responsavel, numero) values (?, ?)")
    .run([cpf, numero])
@@ -371,7 +344,7 @@ server.post("/responsavel/telefone/:cpf", async (req, rep) => {
 // Obter telefones de um responsável
 
 server.get("/responsavel/telefone/:cpf", async (req, rep) => {
-   const { cpf } = req.params as any
+   const { cpf } = req.params
 
    const numeros = await new Promise((resolve, reject) => {
       db.prepare("select * from telefones_responsavel where CPF_responsavel = ?")
@@ -386,8 +359,8 @@ server.get("/responsavel/telefone/:cpf", async (req, rep) => {
 // Deletar um telefone de um responsável
 
 server.delete("/responsavel/telefone/:cpf", async (req, rep) => {
-   const { cpf } = req.params as any
-   const { numero } = req.body as any
+   const { cpf } = req.params
+   const { numero } = req.body
 
    db.prepare("delete from telefones_responsavel where CPF_responsavel = ? and numero = ?")
    .run([cpf, numero])
@@ -399,7 +372,7 @@ server.delete("/responsavel/telefone/:cpf", async (req, rep) => {
 
 server.post("/pet/tipo", async (req, rep) => {
    const id_tipo = uuidv4().substring(0,12)
-   const { tipo, raca } = req.body as any
+   const { tipo, raca } = req.body
 
    db.prepare("insert into tipo_pet (id_tipo, tipo, raca) values (?, ?, ?)")
    .run([id_tipo, tipo, raca])
@@ -430,8 +403,8 @@ server.get("/pet/tipo", async (req, rep) => {
 // Editar tipo pet
 
 server.put("/pet/tipo/:id", async (req, rep) => {
-   const { id } = req.params as any
-   const { tipo, raca } = req.body as any
+   const { id } = req.params
+   const { tipo, raca } = req.body
 
    db.prepare("update tipo_pet set tipo = ?, raca = ? where id_tipo = ?")
    .run([tipo, raca, id])
@@ -449,7 +422,7 @@ server.put("/pet/tipo/:id", async (req, rep) => {
 // Deletar tipo pet
 
 server.delete("/pet/tipo/:id", (req, rep) => {
-   const { id } = req.params as any
+   const { id } = req.params
 
    db.prepare("delete from tipo_pet where id_tipo = ?")
    .run(id)
@@ -461,7 +434,7 @@ server.delete("/pet/tipo/:id", (req, rep) => {
 
 server.post("/pet", async (req, rep) => {
    const codigo_pet = uuidv4().substring(0, 12)
-   const { nome, idade, situacao, id_tipo, cpf_responsavel } = req.body as any
+   const { nome, idade, situacao, id_tipo, cpf_responsavel } = req.body
 
    db.prepare("insert into pet (codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel) values (?, ?, ?, ?, ?, ?)")
    .run([codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel])
@@ -492,7 +465,7 @@ server.get("/pet/all", async (req, rep) => {
 // Obter pet
 
 server.get("/pet/:id", async (req, rep) => {
-   const { id } = req.params as any
+   const { id } = req.params
 
    const pet = await new Promise((resolve, reject) => {
       db.prepare("select * from pet where codigo_pet = ?")
@@ -502,6 +475,36 @@ server.get("/pet/:id", async (req, rep) => {
    })
 
    return rep.status(200).send(pet)
+})
+
+// Editar pet
+
+server.put("/pet/:id", async (req, rep) => {
+   const { id } = req.params
+   const { nome, idade, situacao, id_tipo, cpf_responsavel } = req.body
+
+   db.prepare("update pet set nome = ?, idade = ?, situacao = ?, id_tipo = ?, cpf_responsavel = ? where codigo_pet = ?")
+   .run([nome, idade, situacao, id_tipo, cpf_responsavel, id])
+
+   const updatedPet = await new Promise((resolve, reject) => {
+      db.prepare("select * from pet where codigo_pet = ?")
+      .get(id, (err, row) => {
+         resolve(row)
+      })
+   })
+
+   return rep.status(200).send(updatedPet)
+})
+
+// Deletar pet
+
+server.delete("/pet/:id", (req, rep) => {
+   const { id } = req.params
+
+   db.prepare("delete from pet where codigo_pet = ?")
+   .run(id)
+
+   return rep.status(200).send("Pet deletado com sucesso")
 })
 
 server.listen({
