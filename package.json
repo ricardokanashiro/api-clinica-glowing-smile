@@ -11,13 +11,8 @@
   "author": "Ricardo Kanashiro",
   "license": "ISC",
   "dependencies": {
-    "@types/uuid": "^10.0.0",
     "fastify": "^4.28.1",
     "sqlite3": "^5.1.7",
     "uuid": "^10.0.0"
-  },
-  "devDependencies": {
-    "tsx": "^4.16.2",
-    "typescript": "^5.5.3"
   }
 }
