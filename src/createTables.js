@@ -1,4 +1,4 @@
-import { db } from "./configDB"
+import { db } from "./configDB.js"
 
 db.exec(`
    create table administrador (
@@ -11,12 +11,12 @@ db.exec(`
    );
 
    create table endereco_veterinario (
-      id_endereco_veterinario varchar(12) not null,
+      id_endereco varchar(12) not null,
       cidade varcahr(40) not null,
       bairro varchar(30) not null,
       rua varchar(30) not null,
 
-      primary key (id_endereco_veterinario)
+      primary key (id_endereco)
    );
 
    create table veterinario (
@@ -26,7 +26,7 @@ db.exec(`
       id_endereco varchar(12) not null,
       
       primary key (codigo_veterinario),
-      constraint FK_veterinarioEndereco foreign key (id_endereco) references endereco_veterinario (id_endereco_veterinario)
+      constraint FK_veterinarioEndereco foreign key (id_endereco) references endereco_veterinario (id_endereco)
    );
 
    create table telefones_veterinario (
@@ -87,6 +87,8 @@ db.exec(`
 
    create table consulta (
       id_consulta varchar(12) not null,
+      nome varchar(40) not null,
+      descricao varchar(40),
       data_criado date default (date('now')),
       horario_criado time default (time('now')),
       data date not null,
