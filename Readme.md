@@ -18,16 +18,19 @@
 
 ### About:
 
-This project is based on an API for shortening URLs, where the user provides a pre-existing URL and then the application 
-returns a shorter URL that redirects to the original URL.
+This project is based on an API for a veterinary clinic managing system, that register and manage informations about veterinarians, responsibles, pets, medical appointments and more.
 
 Example:
 
 ```js
-    fetch('http://localhost:3333/', {
-    method: 'POST', 
+    fetch('http://localhost:4444/veterinario', {
+    method: 'POST',
     body: JSON.stringify({
-        "url": "https://github.com/ricardokanashiro"
+        "cidade": "Jundiaí",
+        "bairro": "Eloy Chaves",
+        "rua": "9 de Setembro",
+        "cpf": "12312312312",
+        "nome": "Fulano da Silva"
     }),
     headers:{
         "Content-Type" : "application/json",
@@ -36,7 +39,22 @@ Example:
     .then(data => res = data.json())
     .catch(console.log)
 
-    // Response: { "shortUrl": "http://localhost:3333/_3Ayh78v" }
+    /*
+        Response: [
+            {
+                "codigo_veterinario": "0ae5bd97-32d",
+                "CPF": "12312312312",
+                "nome": "Funalo da Silva",
+                "id_endereco": "fde7e3d9-9c5"
+            },
+            {
+                "id_endereco": "fde7e3d9-9c5",
+                "cidade": "Jundiaí",
+                "bairro": "Eloy Chaves",
+                "rua": "Rua 9 de Setembro"
+            }
+        ]
+    */
 ```
 
 ### Features:
@@ -80,7 +98,7 @@ Example:
 &nbsp;
 <a href="https://fastify.dev/docs/latest/"><img src="https://img.shields.io/badge/Fastify-000?style=for-the-badge&logo=fastify&logoColor=white" /></a>
 &nbsp;
-<a href="https://dev.mysql.com/doc/"><img src="https://img.shields.io/badge/PostgreSQL-000?style=for-the-badge&logo=postgresql&logoColor=316192" /></a>
+<a href="https://www.sqlite.org/"><img src="https://img.shields.io/badge/SQLite-000?style=for-the-badge&logo=sqlite&logoColor=0f3e63" /></a>
 
 - <b>Node</b>: javascript runtime based on Chrome V8 Engine, used to run javascript off browser
 - <b>Fastify</b>: micro nodejs framework used to handle http requests and more easier and faster
@@ -113,19 +131,37 @@ To run this API locally follow the following steps:
 
 ```bash
     npm install
-    npm server
+    npm dev
 ```
 
 or 
 
 ```bash
     yarn install
-    yarn server
+    yarn dev
 ```
 
 ### Configuring Database and Env Variables
 
-- This project uses a SQLite that is a serverless database. Then, to configure the database, you will only need to 
+- This project uses a SQLite that is a serverless database. Then, to configure the database, you will only need to set the sqlite file path on .env:
+
+```env
+    DATABASE_PATH="./db.sqlite"
+```
+
+⚠️ Tip: DATABASE_PATH tells the SQLite database file path into the project
+
+- And run the createTable script with yarn or npm:
+
+```bash
+    npm run db
+```
+
+or 
+
+```
+    yarn db
+```
 
 ## Authors:
 
