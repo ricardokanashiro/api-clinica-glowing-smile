@@ -1,5 +1,5 @@
 {
-  "name": "api-clinica-glowing-smile",
+  "name": "api-clinica-veterinaria",
   "version": "1.0.0",
   "description": "api para uma clínica veterinária fictícia",
   "main": "index.js",
@@ -11,6 +11,7 @@
   "author": "Ricardo Kanashiro",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "fastify": "^4.28.1",
     "sqlite3": "^5.1.7",
     "uuid": "^10.0.0"

@@ -2,3 +2,4 @@ db.sqlite
 node_modules
 plan.md
 notes.md
+.env
