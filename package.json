@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node src/server.js",
-    "db": "node src/createTables.js"
+    "db": "node src/config/createTables.js"
   },
   "author": "Ricardo Kanashiro",
   "license": "ISC",
