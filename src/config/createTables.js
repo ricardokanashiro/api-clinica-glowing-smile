@@ -1,4 +1,4 @@
-import { db } from "./configDB.js"
+import { db } from "./db.js"
 
 db.exec(`
    create table administrador (
