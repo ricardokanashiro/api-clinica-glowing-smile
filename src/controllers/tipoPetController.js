@@ -46,6 +46,9 @@ async function editTipoPet(req, rep) {
 async function deleteTipoPet(req, rep) {
    const { id } = req.params
 
+   db.prepare("delete from pet where id_tipo = ?")
+      .run(id)
+
    db.prepare("delete from tipo_pet where id_tipo = ?")
       .run(id)
 

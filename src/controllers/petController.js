@@ -59,6 +59,9 @@ async function editPet(req, rep) {
 async function deletePet(req, rep) {
    const { id } = req.params
 
+   db.prepare("delete from consulta where id_pet = ?")
+      .run(id)
+
    db.prepare("delete from pet where codigo_pet = ?")
       .run(id)
 
