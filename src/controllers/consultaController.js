@@ -1,7 +1,3 @@
-import { v4 as uuidv4 } from "uuid"
-
-import { db } from "../config/db.js"
-
 async function registerConsulta(req, rep) {
    const id_consulta = uuidv4().substring(0, 12)
    const { data, horario, id_pet, id_responsavel, id_veterinario, nome, descricao } = req.body
