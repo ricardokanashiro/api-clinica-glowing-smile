@@ -1,16 +1,10 @@
-async function registerTipoPet(req, rep) {
-   const id_tipo = uuidv4().substring(0, 12)
+import { registerTipoPetService } from "../services/tipoPetService"
+
+function registerTipoPet(req, rep) {
+   
    const { tipo, raca } = req.body
 
-   db.prepare("insert into tipo_pet (id_tipo, tipo, raca) values (?, ?, ?)")
-      .run([id_tipo, tipo, raca])
-
-   let newTipo = await new Promise((resolve, reject) => {
-      db.prepare("select * from tipo_pet where id_tipo = ?")
-         .get(id_tipo, (err, row) => {
-            resolve(row)
-         })
-   })
+   const newTipo = registerTipoPetService({ tipo, raca })
 
    return rep.status(201).send(newTipo)
 }

@@ -50,4 +50,12 @@ async function deleteConsultaById(id) {
       .run(id)
 }
 
-export { createConsulta, getAllConsultas, getConsultaById, editConsultaById, deleteConsultaById }
+async function deleteConsultaByParam(param, id) {
+   db.prepare("delete from consulta where ? = ?")
+      .run(param, id)
+}
+
+export {
+   createConsulta, getAllConsultas, getConsultaById,
+   editConsultaById, deleteConsultaById, deleteConsultaByParam
+}
