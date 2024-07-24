@@ -20,7 +20,7 @@ function editTipoPet(req, rep) {
    const { id } = req.params
    const { tipo, raca } = req.body
 
-   const updatedTipo = editTipoPetService(id, tipo, raca)
+   const updatedTipo = editTipoPetService({ id, tipo, raca })
 
    return rep.status(200).send(updatedTipo)
 }

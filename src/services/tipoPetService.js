@@ -16,7 +16,7 @@ function getAllTiposPetService() {
    return getAllTiposPet()
 }
 
-function editTipoPetService(id, tipo, raca) {
+function editTipoPetService({ id, tipo, raca }) {
 
    updateTipoPet({ id, tipo, raca })
 
@@ -26,7 +26,7 @@ function editTipoPetService(id, tipo, raca) {
 async function deletePetService(id) {
 
    await deletePetByTipoId(id)
-   deleteTipoPet(id)
+   await deleteTipoPet(id)
 }
 
 export { registerTipoPetService, getAllTiposPetService, editTipoPetService, deletePetService }
