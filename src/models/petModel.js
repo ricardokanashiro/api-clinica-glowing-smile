@@ -1,7 +1,9 @@
+import { db } from "../config/db"
+
 async function getPetById(id) {
    const pet = await new Promise((resolve, reject) => {
       db.prepare("select * from pet where codigo_pet = ?")
-         .get(codigo_pet, (err, row) => {
+         .get(id, (err, row) => {
             resolve(row)
          })
    })
@@ -9,9 +11,20 @@ async function getPetById(id) {
    return pet
 }
 
-async function createPet() {
-   await db.prepare("insert into pet (codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel) values (?, ?, ?, ?, ?, ?)")
-      .run([codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel])
+async function createPet({
+   codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel
+}) {
+
+   await new Promise((resolve, reject) => {
+
+      db.prepare("insert into pet (codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel) values (?, ?, ?, ?, ?, ?)")
+         .run([codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel], function (err) {
+
+            if (err) return reject(err)
+            resolve(this)
+         })
+   })
+
 }
 
 async function getAllPets() {
@@ -28,18 +41,43 @@ async function getAllPets() {
 async function updatePetById({
    id, nome, idade, situacao, id_tipo, cpf_responsavel
 }) {
-   await db.prepare("update pet set nome = ?, idade = ?, situacao = ?, id_tipo = ?, cpf_responsavel = ? where codigo_pet = ?")
-      .run([nome, idade, situacao, id_tipo, cpf_responsavel, id])
+
+   await new Promise((resolve, reject) => {
+
+      db.prepare("update pet set nome = ?, idade = ?, situacao = ?, id_tipo = ?, cpf_responsavel = ? where codigo_pet = ?")
+         .run([nome, idade, situacao, id_tipo, cpf_responsavel, id], function (err) {
+
+            if (err) return reject(err)
+            resolve(this)
+         })
+   })
+
 }
 
 async function deletePetById(id) {
-   await db.prepare("delete from pet where codigo_pet = ?")
-      .run(id)
+
+   await new Promise((resolve, reject) => {
+
+      db.prepare("delete from pet where codigo_pet = ?")
+         .run(id, function (err) {
+
+            if (err) return reject(err)
+            resolve(this)
+         })
+   })
 }
 
 async function deletePetByTipoId(id) {
-   db.prepare("delete from pet where id_tipo = ?")
-      .run(id)
+
+   await new Promise((resolve, reject) => {
+
+      db.prepare("delete from pet where id_tipo = ?")
+         .run(id, function (err) {
+
+            if(err) return reject(err)
+            resolve(this)
+         })
+   })
 }
 
 export { getPetById, createPet, getAllPets, updatePetById, deletePetById, deletePetByTipoId }

@@ -4,28 +4,28 @@ import {
    deleteConsultaService
 } from "../services/consultaService.js"
 
-function registerConsulta(req, rep) {
+async function registerConsulta(req, rep) {
    
    const { data, horario, id_pet, id_responsavel, id_veterinario, nome, descricao } = req.body
 
-   const newConsulta = registerConsultaService({
+   const newConsulta = await registerConsultaService({
        data, horario, id_pet, id_responsavel, id_veterinario, nome, descricao
    })
 
    return rep.status(201).send(newConsulta)
 }
 
-function getAllConsultas(req, rep) {
+async function getAllConsultas(req, rep) {
    
-   const consultas = getAllConsultasService()
+   const consultas = await getAllConsultasService()
 
    return rep.status(200).send(consultas)
 }
 
-function getConsulta(req, rep) {
+async function getConsulta(req, rep) {
    const { id } = req.params
 
-   const consulta = getConsultaService(id)
+   const consulta = await getConsultaService(id)
 
    return rep.status(200).send(consulta)
 }
@@ -34,7 +34,7 @@ async function editConsulta(req, rep) {
    const { id } = req.params
    const { data, horario, id_responsavel, id_pet, id_veterinario, nome, descricao } = req.body
 
-   const updatedConsulta = editConsultaService({
+   const updatedConsulta = await editConsultaService({
       id, data, horario, id_responsavel, id_pet, id_veterinario, nome, descricao
    })
 
@@ -44,7 +44,7 @@ async function editConsulta(req, rep) {
 async function deleteConsulta(req, rep) {
    const { id } = req.params
 
-   deleteConsultaService(id)
+   await deleteConsultaService(id)
 
    return rep.status(200).send("Consulta deletada com sucesso")
 }

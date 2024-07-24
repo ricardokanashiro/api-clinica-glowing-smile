@@ -5,13 +5,13 @@ import {
    editConsultaById, deleteConsultaById 
 } from "../models/consultaModel.js";
 
-function registerConsultaService({ 
+async function registerConsultaService({ 
    data, horario, id_pet, id_responsavel, id_veterinario, nome, descricao
 }) {
 
    const id_consulta = uuidv4().substring(0, 12)
 
-   createConsulta({ 
+   await createConsulta({ 
       id_consulta, data, horario, id_pet, id_responsavel, id_veterinario, nome, descricao 
    })
 
@@ -20,33 +20,33 @@ function registerConsultaService({
    return newConsulta
 }
 
-function getAllConsultasService() {
-   const consultas = getAllConsultas()
+async function getAllConsultasService() {
+   const consultas = await getAllConsultas()
 
    return consultas
 }
 
-function getConsultaService(id) {
-   const consulta = getConsultaById(id)
+async function getConsultaService(id) {
+   const consulta = await getConsultaById(id)
 
    return consulta
 }
 
-function editConsultaService({
+async function editConsultaService({
    data, horario, id_responsavel, id_pet, id_veterinario, nome, descricao, id
 }) {
 
-   editConsultaById({
+   await editConsultaById({
       data, horario, id_responsavel, id_pet, id_veterinario, nome, descricao, id
    })
 
-   const updatedConsulta = getConsultaById(id)
+   const updatedConsulta = await getConsultaById(id)
 
    return updatedConsulta
 }
 
-function deleteConsultaService(id) {
-   deleteConsultaById(id)
+async function deleteConsultaService(id) {
+   await deleteConsultaById(id)
 }
 
 export { 

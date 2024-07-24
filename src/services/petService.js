@@ -6,13 +6,13 @@ import {
 
 import { deleteConsultaByParam } from "../models/consultaModel"
 
-function registerPetService({
+async function registerPetService({
    nome, idade, situacao, id_tipo, cpf_responsavel
 }) {
 
    const codigo_pet = uuidv4().substring(0, 12)
 
-   createPet({
+   await createPet({
       codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel
    })
 
@@ -21,23 +21,23 @@ function registerPetService({
    return newPet
 }
 
-function getAllPetsService() {
-   const allPets = getAllPets()
+async function getAllPetsService() {
+   const allPets = await getAllPets()
 
    return allPets
 }
 
-function getPetService(id) {
-   const pet = getPetById(id)
+async function getPetService(id) {
+   const pet = await getPetById(id)
 
    return pet
 }
 
-function editPetService({
+async function editPetService({
    id, nome, idade, situacao, id_tipo, cpf_responsavel
 }) {
 
-   updatePetById({
+   await updatePetById({
       id, nome, idade, situacao, id_tipo, cpf_responsavel
    })
 
@@ -49,7 +49,7 @@ function editPetService({
 async function deletePetService(id) {
 
    await deleteConsultaByParam("id_pet", id)
-   deletePetById(id)
+   await deletePetById(id)
 }
 
 export { registerPetService, getAllPetsService, getPetService, editPetService, deletePetService }
