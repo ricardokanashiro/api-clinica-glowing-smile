@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 
-import { getPetById, createTipoPet } from "../models/tipoPetModel"
+import { getPetById, createTipoPet, getAllTiposPet, updateTipoPet, deleteTipoPet } from "../models/tipoPetModel"
+import { deletePetByTipoId } from "../models/petModel"
 
 function registerTipoPetService({ tipo, raca }) {
 
@@ -11,4 +12,21 @@ function registerTipoPetService({ tipo, raca }) {
    return getPetById(id_tipo)
 }
 
-export { registerTipoPetService }
+function getAllTiposPetService() {
+   return getAllTiposPet()
+}
+
+function editTipoPetService(id, tipo, raca) {
+
+   updateTipoPet({ id, tipo, raca })
+
+   return getPetById(id)
+}
+
+async function deletePetService(id) {
+
+   await deletePetByTipoId(id)
+   deleteTipoPet(id)
+}
+
+export { registerTipoPetService, getAllTiposPetService, editTipoPetService, deletePetService }

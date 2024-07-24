@@ -37,4 +37,9 @@ async function deletePetById(id) {
       .run(id)
 }
 
-export { getPetById, createPet, getAllPets, updatePetById, deletePetById }
+async function deletePetByTipoId(id) {
+   db.prepare("delete from pet where id_tipo = ?")
+      .run(id)
+}
+
+export { getPetById, createPet, getAllPets, updatePetById, deletePetById, deletePetByTipoId }

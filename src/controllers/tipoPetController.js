@@ -1,4 +1,4 @@
-import { registerTipoPetService } from "../services/tipoPetService"
+import { registerTipoPetService, getAllTiposPetService, editTipoPetService, deletePetService } from "../services/tipoPetService"
 
 function registerTipoPet(req, rep) {
    
@@ -9,30 +9,18 @@ function registerTipoPet(req, rep) {
    return rep.status(201).send(newTipo)
 }
 
-async function getAllTipoPet(req, rep) {
-   let tipos = await new Promise((resolve, reject) => {
-      db.prepare("select * from tipo_pet")
-         .all((err, rows) => {
-            resolve(rows)
-         })
-   })
+function getAllTipoPet(req, rep) {
+   
+   const tipos = getAllTiposPetService()
 
    return rep.status(200).send(tipos)
 }
 
-async function editTipoPet(req, rep) {
+function editTipoPet(req, rep) {
    const { id } = req.params
    const { tipo, raca } = req.body
 
-   db.prepare("update tipo_pet set tipo = ?, raca = ? where id_tipo = ?")
-      .run([tipo, raca, id])
-
-   let updatedTipo = await new Promise((resolve, reject) => {
-      db.prepare("select * from tipo_pet where id_tipo = ?")
-         .get([id], (err, row) => {
-            resolve(row)
-         })
-   })
+   const updatedTipo = editTipoPetService(id, tipo, raca)
 
    return rep.status(200).send(updatedTipo)
 }
@@ -40,11 +28,7 @@ async function editTipoPet(req, rep) {
 async function deleteTipoPet(req, rep) {
    const { id } = req.params
 
-   db.prepare("delete from pet where id_tipo = ?")
-      .run(id)
-
-   db.prepare("delete from tipo_pet where id_tipo = ?")
-      .run(id)
+   await deletePetService(id)
 
    return rep.status(200).send("Tipo deletado com sucesso")
 }

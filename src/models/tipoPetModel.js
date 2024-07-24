@@ -12,4 +12,28 @@ async function createTipoPet({ id_tipo, tipo, raca }) {
       .run([id_tipo, tipo, raca])
 }
 
-export { getPetById, createTipoPet }
+async function getAllTiposPet() {
+   let tipos = await new Promise((resolve, reject) => {
+      db.prepare("select * from tipo_pet")
+         .all((err, rows) => {
+            resolve(rows)
+         })
+   })
+
+   return tipos
+}
+
+async function updateTipoPet({
+   id, tipo, raca
+}) {
+
+   await db.prepare("update tipo_pet set tipo = ?, raca = ? where id_tipo = ?")
+      .run([tipo, raca, id])
+}
+
+async function deleteTipoPet(id) {
+   db.prepare("delete from tipo_pet where id_tipo = ?")
+      .run(id)
+}
+
+export { getPetById, createTipoPet, getAllTiposPet, updateTipoPet, deleteTipoPet }
