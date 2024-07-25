@@ -3,24 +3,24 @@ import { v4 as uuidv4 } from "uuid"
 import { getPetById, createTipoPet, getAllTiposPet, updateTipoPet, deleteTipoPet } from "../models/tipoPetModel.js"
 import { deletePetByTipoId } from "../models/petModel.js"
 
-function registerTipoPetService({ tipo, raca }) {
+async function registerTipoPetService({ tipo, raca }) {
 
    const id_tipo = uuidv4().substring(0, 12)
 
-   createTipoPet({ id_tipo, tipo, raca })
+   await createTipoPet({ id_tipo, tipo, raca })
 
    return getPetById(id_tipo)
 }
 
-function getAllTiposPetService() {
-   return getAllTiposPet()
+async function getAllTiposPetService() {
+   return await getAllTiposPet()
 }
 
-function editTipoPetService({ id, tipo, raca }) {
+async function editTipoPetService({ id, tipo, raca }) {
 
-   updateTipoPet({ id, tipo, raca })
+   await updateTipoPet({ id, tipo, raca })
 
-   return getPetById(id)
+   return await getPetById(id)
 }
 
 async function deletePetService(id) {

@@ -16,7 +16,7 @@ async function registerPetService({
       codigo_pet, nome, idade, situacao, id_tipo, cpf_responsavel
    })
 
-   const newPet = getPetById(id)
+   const newPet = getPetById(codigo_pet)
 
    return newPet
 }

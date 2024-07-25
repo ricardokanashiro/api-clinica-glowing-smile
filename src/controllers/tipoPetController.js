@@ -2,27 +2,27 @@ import {
    registerTipoPetService, getAllTiposPetService, editTipoPetService, deletePetService 
 } from "../services/tipoPetService.js"
 
-function registerTipoPet(req, rep) {
+async function registerTipoPet(req, rep) {
    
    const { tipo, raca } = req.body
 
-   const newTipo = registerTipoPetService({ tipo, raca })
+   const newTipo = await registerTipoPetService({ tipo, raca })
 
    return rep.status(201).send(newTipo)
 }
 
-function getAllTipoPet(req, rep) {
+async function getAllTipoPet(req, rep) {
    
-   const tipos = getAllTiposPetService()
+   const tipos = await getAllTiposPetService()
 
    return rep.status(200).send(tipos)
 }
 
-function editTipoPet(req, rep) {
+async function editTipoPet(req, rep) {
    const { id } = req.params
    const { tipo, raca } = req.body
 
-   const updatedTipo = editTipoPetService({ id, tipo, raca })
+   const updatedTipo = await editTipoPetService({ id, tipo, raca })
 
    return rep.status(200).send(updatedTipo)
 }
