@@ -74,10 +74,26 @@ async function deletePetByTipoId(id) {
       db.prepare("delete from pet where id_tipo = ?")
          .run(id, function (err) {
 
+            if (err) return reject(err)
+            resolve(this)
+         })
+   })
+}
+
+async function deletePetByCpfResponsavel(cpf) {
+
+   await new Promise((resolve, reject) => {
+
+      db.prepare("delete from pet where cpf_responsavel = ?")
+         .run(cpf, function (err) {
+
             if(err) return reject(err)
             resolve(this)
          })
    })
 }
 
-export { getPetById, createPet, getAllPets, updatePetById, deletePetById, deletePetByTipoId }
+export { 
+   getPetById, createPet, getAllPets, updatePetById, 
+   deletePetById, deletePetByTipoId, deletePetByCpfResponsavel 
+}
