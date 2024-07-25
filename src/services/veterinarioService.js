@@ -89,12 +89,13 @@ async function deleteTelefoneVeterinarioService({ id, numero }) {
 }
 
 async function deleteVeterinarioService(id) {
-
+   
+   const { id_endereco } = await getEnderecoByVeterinarioId(id)
+   
    await deleteConsultaByParam("id_veterinario", id)
    await deleteAllTelefonesVeterinario(id)
    await deleteVeterinarioById(id)
 
-   const { id_endereco } = await getEnderecoByVeterinarioId(id)
    await deleteEnderecoById(id_endereco)
 }
 

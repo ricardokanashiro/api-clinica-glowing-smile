@@ -193,7 +193,7 @@ async function deleteEnderecoById(id) {
    await new Promise((resolve, reject) => {
 
       db.prepare("delete from endereco_veterinario where id_endereco = ?")
-         .run(id_endereco, function(err) {
+         .run(id, function(err) {
 
             if(err) return reject(err)
             resolve(this)
