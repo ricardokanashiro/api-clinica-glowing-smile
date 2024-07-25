@@ -1,13 +1,12 @@
 import { v4 as uuidv4 } from "uuid"
 
 import { 
-   createResponsavel,
-   createResponsavelEndereco, createTelefoneResponsavel,
-   deleteEnderecoResponsavel,deleteResponsavelByCpf,
+   createResponsavel, createResponsavelEndereco, createTelefoneResponsavel,
+   deleteEnderecoResponsavel,deleteResponsavelByCpf, 
    deleteTelefoneResponsavelByCpfandNumber,
    deleteTelefonesResponsavelByCpf, getAllReponsaveis, getAllTelefonesResponsavel, 
    getEnderecoById, getResponsavelByCpf, getTelefoneResponsavelByCpfandNumber, 
-   updateEnderecoResponsavel 
+   updateEnderecoResponsavel, updateResponsavel
 } from "../models/responsavelModel.js"
 
 import { deleteConsultaByParam } from "../models/consultaModel.js"
