@@ -5,8 +5,9 @@ import {
    createResponsavelEndereco, createTelefoneResponsavel,
    deleteEnderecoResponsavel,deleteResponsavelByCpf,
    deleteTelefoneResponsavelByCpfandNumber,
-   deleteTelefonesResponsavelByCpf, getAllReponsaveis, getAllTelefonesResponsavel, getEnderecoById, 
-   getResponsavelByCpf, getTelefoneResponsavelByCpfandNumber, updateEnderecoResponsavel 
+   deleteTelefonesResponsavelByCpf, getAllReponsaveis, getAllTelefonesResponsavel, 
+   getEnderecoById, getResponsavelByCpf, getTelefoneResponsavelByCpfandNumber, 
+   updateEnderecoResponsavel 
 } from "../models/responsavelModel.js"
 
 import { deleteConsultaByParam } from "../models/consultaModel.js"

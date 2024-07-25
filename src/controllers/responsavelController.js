@@ -13,7 +13,7 @@ async function registerResponsavel(req, rep) {
       cpf, nome, cidade, bairro, rua
    })
 
-   return rep.status(201).send([newResponsavel, newEndereco])
+   return rep.status(201).send(newResponsavel)
 }
 
 async function getAllReponsaveis(req, rep) {
