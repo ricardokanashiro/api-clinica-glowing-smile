@@ -1,6 +1,6 @@
 import { 
    registerPetService, getAllPetsService, getPetService, editPetService, deletePetService
-} from "../services/petService"
+} from "../services/petService.js"
 
 async function registerPet(req, rep) {
    const { nome, idade, situacao, id_tipo, cpf_responsavel } = req.body

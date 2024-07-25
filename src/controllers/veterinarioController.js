@@ -4,7 +4,7 @@ import {
    getEnderecoVeterinarioService, editEnderecoVeterinarioService, 
    registerTelefoneVeterinarioService, getTelefonesVeterinarioService, 
    deleteTelefoneVeterinarioService, deleteVeterinarioService
-} from "../services/veterinarioService"
+} from "../services/veterinarioService.js"
 
 async function getVeterinario(req, rep) {
 

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid"
 
-import { getPetById, createTipoPet, getAllTiposPet, updateTipoPet, deleteTipoPet } from "../models/tipoPetModel"
-import { deletePetByTipoId } from "../models/petModel"
+import { getPetById, createTipoPet, getAllTiposPet, updateTipoPet, deleteTipoPet } from "../models/tipoPetModel.js"
+import { deletePetByTipoId } from "../models/petModel.js"
 
 function registerTipoPetService({ tipo, raca }) {
 

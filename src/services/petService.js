@@ -2,9 +2,9 @@ import { v4 as uuidv4 } from "uuid"
 
 import { 
    getPetById, createPet, getAllPets, updatePetById, deletePetById 
-} from "../models/petModel"
+} from "../models/petModel.js"
 
-import { deleteConsultaByParam } from "../models/consultaModel"
+import { deleteConsultaByParam } from "../models/consultaModel.js"
 
 async function registerPetService({
    nome, idade, situacao, id_tipo, cpf_responsavel

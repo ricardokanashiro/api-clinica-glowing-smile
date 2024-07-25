@@ -1,4 +1,4 @@
-import { db } from "../config/db"
+import { db } from "../config/db.js"
 
 async function getPetById(id) {
    const pet = await new Promise((resolve, reject) => {

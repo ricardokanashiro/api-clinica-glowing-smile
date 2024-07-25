@@ -1,30 +1,16 @@
 import { 
-   deleteResponsavelService,deleteTelefoneResponsavelService,editEnderecoResponsavelService,
-   editResponsavelService, getAllReponsaveisService, 
-   getAllTelefonesResponsavelService, 
+   deleteResponsavelService,deleteTelefoneResponsavelService,
+   editEnderecoResponsavelService, editResponsavelService, 
+   getAllReponsaveisService, getAllTelefonesResponsavelService, 
    getEnderecoResponsavelService, getResponsavelService,
-   registerTelefoneResponsavelService
-} from "../services/responsavelService"
+   registerResponsavelService, registerTelefoneResponsavelService
+} from "../services/responsavelService.js"
 
 async function registerResponsavel(req, rep) {
    const { cpf, nome, cidade, bairro, rua } = req.body
-   const enderecoId = uuidv4().substring(0, 12)
-
-   db.prepare("insert into endereco_responsavel (id_endereco, cidade, bairro, rua) values (?, ?, ?, ?)")
-      .run([enderecoId, cidade, bairro, rua])
-
-   let newResponsavel = await new Promise((resolve, reject) => {
-      db.prepare("select * from responsavel where cpf = ?")
-         .get(cpf, (err, row) => {
-            resolve(row)
-         })
-   })
-
-   let newEndereco = await new Promise((resolve, reject) => {
-      db.prepare("select * from endereco_responsavel where id_endereco = ?")
-         .get(enderecoId, (err, row) => {
-            resolve(row)
-         })
+   
+   const newResponsavel = await registerResponsavelService({
+      cpf, nome, cidade, bairro, rua
    })
 
    return rep.status(201).send([newResponsavel, newEndereco])

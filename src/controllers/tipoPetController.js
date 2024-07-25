@@ -1,4 +1,6 @@
-import { registerTipoPetService, getAllTiposPetService, editTipoPetService, deletePetService } from "../services/tipoPetService"
+import { 
+   registerTipoPetService, getAllTiposPetService, editTipoPetService, deletePetService 
+} from "../services/tipoPetService.js"
 
 function registerTipoPet(req, rep) {
    

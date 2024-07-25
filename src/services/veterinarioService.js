@@ -7,9 +7,9 @@ import {
    createTelefoneVeterinario, getAllTelefonesVeterinario,
    deleteTelefoneVeterinario, deleteAllTelefonesVeterinario,
    deleteVeterinarioById, deleteEnderecoById
-} from "../models/veterinarioModel"
+} from "../models/veterinarioModel.js"
 
-import { deleteConsultaByParam } from "../models/consultaModel"
+import { deleteConsultaByParam } from "../models/consultaModel.js"
 
 async function getVeterinarioService(id) {
 

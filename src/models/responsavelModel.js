@@ -1,4 +1,4 @@
-import { db } from "../config/db"
+import { db } from "../config/db.js"
 
 async function getResponsavelByCpf(cpf) {
 
@@ -32,9 +32,22 @@ async function createResponsavel({ cpf, nome, id_endereco }) {
    await new Promise((resolve, reject) => {
 
       db.prepare("insert into responsavel (CPF, nome, id_endereco) values (?, ?, ?)")
-         .run([cpf, nome, enderecoId], function (err) {
+         .run([cpf, nome, id_endereco], function (err) {
 
             if (err) return reject(err)
+            resolve(this)
+         })
+   })
+}
+
+async function createResponsavelEndereco({ id_endereco, cidade, bairro, rua }) {
+
+   await new Promise((resolve, reject) => {
+
+      db.prepare("insert into endereco_responsavel (id_endereco, cidade, bairro, rua) values (?, ?, ?, ?)")
+         .run([id_endereco, cidade, bairro, rua], function(err) {
+
+            if(err) return reject(err)
             resolve(this)
          })
    })
@@ -175,9 +188,9 @@ async function deleteTelefoneResponsavelByCpfandNumber({ cpf, numero }) {
    await new Promise((resolve, reject) => {
 
       db.prepare("delete from telefones_responsavel where CPF_responsavel = ? and numero = ?")
-         .run([cpf, numero], function(err) {
+         .run([cpf, numero], function (err) {
 
-            if(err) return reject(err)
+            if (err) return reject(err)
             resolve(this)
          })
    })
@@ -185,9 +198,9 @@ async function deleteTelefoneResponsavelByCpfandNumber({ cpf, numero }) {
 
 export {
    getResponsavelByCpf, getAllReponsaveis, createResponsavel,
-   getEnderecoResponsavelByCpf, getEnderecoById, updateResponsavel,
-   updateEnderecoResponsavel, deleteResponsavelByCpf,
-   deleteEnderecoResponsavel, deleteTelefonesResponsavelByCpf,
-   createTelefoneResponsavel, getTelefoneResponsavelByCpfandNumber,
-   getAllTelefonesResponsavel, deleteTelefoneResponsavelByCpfandNumber
+   getEnderecoById, updateResponsavel, updateEnderecoResponsavel, 
+   deleteResponsavelByCpf, deleteEnderecoResponsavel, 
+   deleteTelefonesResponsavelByCpf, createTelefoneResponsavel, 
+   getTelefoneResponsavelByCpfandNumber,getAllTelefonesResponsavel, 
+   deleteTelefoneResponsavelByCpfandNumber, createResponsavelEndereco
 }

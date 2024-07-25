@@ -1,15 +1,16 @@
 import { v4 as uuidv4 } from "uuid"
 
 import { 
-   createTelefoneResponsavel,
+   createResponsavel,
+   createResponsavelEndereco, createTelefoneResponsavel,
    deleteEnderecoResponsavel,deleteResponsavelByCpf,
    deleteTelefoneResponsavelByCpfandNumber,
    deleteTelefonesResponsavelByCpf, getAllReponsaveis, getAllTelefonesResponsavel, getEnderecoById, 
    getResponsavelByCpf, getTelefoneResponsavelByCpfandNumber, updateEnderecoResponsavel 
-} from "../models/responsavelModel"
+} from "../models/responsavelModel.js"
 
-import { deleteConsultaByParam } from "../models/consultaModel"
-import { deletePetByCpfResponsavel } from "../models/petModel"
+import { deleteConsultaByParam } from "../models/consultaModel.js"
+import { deletePetByCpfResponsavel } from "../models/petModel.js"
 
 async function getResponsavelService(cpf) {
 
@@ -23,6 +24,21 @@ async function getAllReponsaveisService() {
    const resposaveis = await getAllReponsaveis()
 
    return resposaveis
+}
+
+async function registerResponsavelService({
+   cpf, nome, cidade, bairro, rua
+}) {
+
+   const id_endereco = uuidv4().substring(0, 12)
+
+   await createResponsavelEndereco({ id_endereco, cidade, bairro, rua })
+   await createResponsavel({ cpf, nome, id_endereco })
+
+   const newResponsavel = await getResponsavelByCpf(cpf)
+   const newEndereco = await getEnderecoById(id_endereco)
+
+   return { newResponsavel, newEndereco }
 }
 
 async function getEnderecoResponsavelService(cpf) {
@@ -90,5 +106,5 @@ export {
    getEnderecoResponsavelService, editResponsavelService,
    editEnderecoResponsavelService, deleteResponsavelService,
    registerTelefoneResponsavelService, getAllTelefonesResponsavelService,
-   deleteTelefoneResponsavelService
+   deleteTelefoneResponsavelService, registerResponsavelService
 }
