@@ -24,10 +24,6 @@ async function getAllVeterinarios(req, rep) {
 
 async function registerVeterinario(req, rep) {
    const { cidade, bairro, rua, cpf, nome } = req.body
-   
-   registerVeterinarioService({
-      cidade, bairro, rua, cpf, nome
-   })
 
    const newVeterinarioAndEndereco = await registerVeterinarioService({
       cidade, bairro, rua, cpf, nome
